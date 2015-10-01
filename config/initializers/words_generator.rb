@@ -1,1 +1,1 @@
-WORDS_GENERATOR_URL = 'http://localhost:9292/api'
+WORDS_GENERATOR_URL = ENV['WORDS_GENERATOR_URL'] || 'http://localhost:9292/api'
