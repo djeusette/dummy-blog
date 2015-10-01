@@ -9,6 +9,11 @@ module Api
 
           Post.create!({title: title, content: content})
         end
+
+        desc 'Retrieve all posts'
+        get '/' do
+          Post.all
+        end
       end
     end
   end
