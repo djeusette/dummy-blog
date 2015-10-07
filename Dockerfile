@@ -12,7 +12,7 @@ WORKDIR $HOME
 # Install gems
 # Doing this before adding the code allows to benefit from the cache system
 ADD Gemfile* $HOME/
-RUN bundle install --jobs 20 --retry 5
+RUN bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3
 
 # Add the app code
 ADD . $HOME
