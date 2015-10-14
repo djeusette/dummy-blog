@@ -8,6 +8,11 @@ dependencies:
   override:
     - docker build -t djeusette/dummy-blog:$CIRCLE_SHA1 .
 
+
+database:
+  override:
+    - docker run djeusette/dummy-blog:$CIRCLE_SHA1 bundle exec rake db:create db:schema:load --trace
+
 test:
   override:
     - docker run -e "DATABASE_HOST=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')" -e DATABASE_NAME=circle_ruby_test -e DATABASE_USERNAME=ubuntu djeusette/dummy-blog:$CIRCLE_SHA1 bundle exec rspec spec --format doc
