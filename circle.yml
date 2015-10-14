@@ -4,7 +4,7 @@ machine:
   services:
     - docker
   environment:
-    HOST_IP: $(ip route show 0.0.0.0/0 | grep -Eo 'via \S+' | awk '{ print $2 }')
+    HOST_IP: $(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
 
 dependencies:
   override:
