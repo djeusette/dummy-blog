@@ -3,6 +3,8 @@ machine:
     version: 2.2.3
   services:
     - docker
+  environment:
+    - HOST_IP: $(ip route show 0.0.0.0/0 | grep -Eo 'via \S+' | awk '{ print $2 }')
 
 dependencies:
   override:
@@ -10,8 +12,8 @@ dependencies:
 
 database:
   override:
-    - docker run -e "DATABASE_HOST=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')" -e DATABASE_NAME=circle_ruby_test -e DATABASE_USERNAME=ubuntu djeusette/dummy-blog:$CIRCLE_SHA1 bundle exec rake db:create db:schema:load --trace
+    - docker run -e DATABASE_HOST=$HOST_IP -e DATABASE_NAME=circle_ruby_test -e DATABASE_USERNAME=ubuntu djeusette/dummy-blog:$CIRCLE_SHA1 bundle exec rake db:create db:schema:load --trace
 
 test:
   override:
-    - docker run -e "DATABASE_HOST=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')" -e DATABASE_NAME=circle_ruby_test -e DATABASE_USERNAME=ubuntu djeusette/dummy-blog:$CIRCLE_SHA1 bundle exec rspec spec --format doc
+    - docker run -e DATABASE_HOST=$HOST_IP -e DATABASE_NAME=circle_ruby_test -e DATABASE_USERNAME=ubuntu djeusette/dummy-blog:$CIRCLE_SHA1 bundle exec rspec spec --format doc
