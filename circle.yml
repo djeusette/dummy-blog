@@ -1,7 +1,14 @@
 machine:
   ruby:
     version: 2.2.3
+  services:
+    - docker
+
+dependencies:
+  override:
+    - docker build -t djeusette/dummy-blog:$CIRCLE_SHA1 .
 
 test:
   override:
-    - bundle exec rspec spec
+    - docker run djeusette/dummy-blog:$CIRCLE_SHA1 bundle exec rspec spec --format doc
+
