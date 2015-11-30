@@ -16,6 +16,7 @@ RUN bundle check || bundle install --jobs=4 --retry=3
 
 # Add the app code
 ADD . $HOME
+RUN RAILS_ENV=production bundle exec rake assets:precompile --trace
 
 EXPOSE 3000
 
